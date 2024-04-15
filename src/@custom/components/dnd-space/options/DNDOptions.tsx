@@ -11,6 +11,9 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { useDraggable } from "@dnd-kit/core";
 import DNDItemDraggable from "../draggableItems";
+import { ColorPicker, useColor } from "react-color-palette";
+import "react-color-palette/css";
+
 
 const DropOptions = {
   "on-off": [
@@ -29,18 +32,20 @@ const DropOptions = {
   ],
   LevelControl: [
     {
+      name: "temp",
       compo: <Slider defaultValue={[33]} max={100} step={1} />,
     },
     {
+      name: "speed",
       compo: <Slider defaultValue={[33]} max={100} step={1} />,
     },
   ],
 };
 
 const DNDOptions = () => {
-
+  const [color, setColor] = useColor("#561ecb");
   return (
-    <div className="w-[20%]">
+    <div className="w-[20%] overflow-y-scroll">
       <Accordion type="single" defaultValue="item-1">
         <AccordionItem value="item-1">
           <AccordionTrigger>Layout</AccordionTrigger>
@@ -61,21 +66,18 @@ const DNDOptions = () => {
             <div className="mt-3 flex flex-col gap-3">
               <div>On/Off Control</div>
               {DropOptions["on-off"].map((item, index) => (
-                <DNDItemDraggable key={index} name={item.name} compo={item.compo} />
+                <DNDItemDraggable showlabel={true} key={index} name={item.name} compo={item.compo} />
               ))}
 
               <div>LevelControl</div>
               {DropOptions["LevelControl"].map((item, index) => (
-                <div key={index}>
-                  <div className="border p-4 rounded-md">
-                    <div>{item.compo}</div>
-                  </div>
-                </div>
+                <DNDItemDraggable showlabel={false} key={index} name={item.name} compo={item.compo} />
               ))}
             </div>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+      <ColorPicker color={color} onChange={setColor} />;
     </div>
   );
 };

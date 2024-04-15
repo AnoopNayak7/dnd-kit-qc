@@ -1,5 +1,4 @@
-// DNDCard.tsx
-import React, { FC, ReactNode, useState } from "react";
+import React, { FC, ReactNode } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import {
   Card,
@@ -12,7 +11,7 @@ import {
 interface CardProps {
   name: string;
   description: string;
-  item: ReactNode[];
+  items: { name: string; compo: ReactNode }[];
 }
 
 const DNDCard: FC<CardProps> = (props) => {
@@ -24,20 +23,25 @@ const DNDCard: FC<CardProps> = (props) => {
     backgroundColor: isOver ? "lightblue" : "transparent",
   };
 
+  console.log(props)
+
   return (
-    <div
-      className="min-w-[400px] bxsdw"
-    >
+    <div className="min-w-[400px] bxsdw">
       <Card>
         <CardHeader>
           <CardTitle>{props.name}</CardTitle>
           <CardDescription>{props.description}</CardDescription>
         </CardHeader>
         <CardContent ref={setNodeRef} style={style}>
-          {props.item.length > 0 ? (
+          {props?.items?.length > 0 ? (
             <ul>
-              {props?.item?.map((comp: ReactNode, index) => (
-                <li key={index}>{comp}</li>
+              {props.items.map((item, index) => (
+                <li key={index}>
+                  <div className="flex justify-between items-center border p-4 rounded-md mt-2">
+                    <div>{item.name}</div>
+                    <div>{item.compo}</div>
+                  </div>
+                </li>
               ))}
             </ul>
           ) : (

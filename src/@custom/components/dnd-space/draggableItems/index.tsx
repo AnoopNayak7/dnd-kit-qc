@@ -1,23 +1,30 @@
 import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 import React, { FC, ReactNode } from "react";
 
-
 interface DNDItemDraggableProps {
-  key: number;
   name: string;
-  compo: ReactNode
+  showlabel?: boolean;
+  compo: ReactNode;
 }
+
 const DNDItemDraggable: FC<DNDItemDraggableProps> = (props) => {
+  console.log("DNDItemDraggable",props)
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: 'draggable',
-    data: {title: props.compo}
+    id: props.name,
+    data: { title: props.compo },
   });
+
+  const styles = {
+    transform: CSS.Transform.toString(transform),
+  };
+
   return (
-    <div ref={setNodeRef} {...attributes} {...listeners}>
-      <div>
+    <div {...listeners}>
+      <div className="z-100" ref={setNodeRef} {...attributes} style={styles}>
         <div className="flex justify-between items-center border p-4 rounded-md">
-          <div>{props.name}</div>
-          <div>{props.compo}</div>
+          {props.showlabel ? <div>{props.name}</div> : null}
+          {props.compo}
         </div>
       </div>
     </div>
