@@ -1,4 +1,3 @@
-// DNDOptions.tsx
 import React from "react";
 import {
   Accordion,
@@ -9,33 +8,36 @@ import {
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { useDraggable } from "@dnd-kit/core";
 import DNDItemDraggable from "../draggableItems";
 import { ColorPicker, useColor } from "react-color-palette";
 import "react-color-palette/css";
 
-
 const DropOptions = {
   "on-off": [
     {
+      id: 1,
       name: "Switch",
       compo: <Switch />,
     },
     {
+      id: 2,
       name: "Door lock",
       compo: <Switch />,
     },
     {
+      id: 3,
       name: "Alarm",
       compo: <Switch />,
     },
   ],
   LevelControl: [
     {
+      id: 1,
       name: "temp",
       compo: <Slider defaultValue={[33]} max={100} step={1} />,
     },
     {
+      id: 2,
       name: "speed",
       compo: <Slider defaultValue={[33]} max={100} step={1} />,
     },

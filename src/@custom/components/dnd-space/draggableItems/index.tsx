@@ -5,14 +5,13 @@ import React, { FC, ReactNode } from "react";
 interface DNDItemDraggableProps {
   name: string;
   showlabel?: boolean;
-  compo: ReactNode;
+  compo: any;
 }
 
 const DNDItemDraggable: FC<DNDItemDraggableProps> = (props) => {
-  console.log("DNDItemDraggable",props)
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: props.name,
-    data: { title: props.compo },
+    data: { compo: props.compo },
   });
 
   const styles = {
@@ -24,7 +23,7 @@ const DNDItemDraggable: FC<DNDItemDraggableProps> = (props) => {
       <div className="z-100" ref={setNodeRef} {...attributes} style={styles}>
         <div className="flex justify-between items-center border p-4 rounded-md">
           {props.showlabel ? <div>{props.name}</div> : null}
-          {props.compo}
+           {props.compo}
         </div>
       </div>
     </div>

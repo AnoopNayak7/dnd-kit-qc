@@ -1,26 +1,39 @@
-import React, { useState } from "react";
-import { DndContext, closestCorners } from "@dnd-kit/core";
+import React, { useCallback, useState } from "react";
+import { DndContext, KeyboardSensor, PointerSensor, closestCorners, useSensor, useSensors } from "@dnd-kit/core";
 import DNDCanvas from "@/@custom/components/dnd-space/canvas";
 import DNDOptions from "@/@custom/components/dnd-space/options/DNDOptions";
-import DNDCard from "@/@custom/components/dnd-space/card";
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+} from '@dnd-kit/sortable';
 
 export default function Home() {
   const [droppedItems, setDroppedItems] = useState([]);
 
+  console.log("I GUESS", droppedItems);
+
+  const handleDragEnd = useCallback(({ over, active }:any) => {
+    console.log("handleDraggable ali idu bandide????????????????????",over )
+    if (over && over.id === "droppable") {
+      const droppedItem = { name: active.id, compo: active.data.compo };
+      setDroppedItems((prevItems) => [...prevItems, droppedItem]);
+    }
+  }, []);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   return (
-    <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
+    <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners} sensors={sensors}>
       <div className={`flex h-[87vh] gap-5 mt-5`}>
-        <DNDCanvas items={droppedItems}/>
+        <DNDCanvas items={droppedItems} />
         <DNDOptions />
-        {/* <DNDCard name="Air Condition" description="Jio Home living" items={droppedItems} /> */}
       </div>
     </DndContext>
   );
-
-  function handleDragEnd(event: { over: { id: string; }; active: { id: any; data: { title: any; }; }; }) {
-    if (event.over && event.over.id === "droppable") {
-      const droppedItem = { name: event.active.id, compo: event.active.data.title };
-      setDroppedItems((prevItems) => [...prevItems, droppedItem]);
-    }
-  }
 }

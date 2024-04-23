@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from "react";
-import { useDroppable } from "@dnd-kit/core";
+import { KeyboardSensor, PointerSensor, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
 import {
   Card,
   CardContent,
@@ -7,11 +7,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import SortableItem from "./SortableItem";
 
 interface CardProps {
-  name: string;
+  name: string | number;
   description: string;
-  items: { name: string; compo: ReactNode }[];
+  items: { id:number, name: string; compo: ReactNode }[];
 }
 
 const DNDCard: FC<CardProps> = (props) => {
@@ -19,11 +26,16 @@ const DNDCard: FC<CardProps> = (props) => {
     id: "droppable"
   });
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   const style = {
     backgroundColor: isOver ? "lightblue" : "transparent",
   };
-
-  console.log(props)
 
   return (
     <div className="min-w-[400px] bxsdw">
@@ -33,15 +45,11 @@ const DNDCard: FC<CardProps> = (props) => {
           <CardDescription>{props.description}</CardDescription>
         </CardHeader>
         <CardContent ref={setNodeRef} style={style}>
+          <SortableContext items={props.items} strategy={verticalListSortingStrategy}>
           {props?.items?.length > 0 ? (
             <ul>
               {props.items.map((item, index) => (
-                <li key={index}>
-                  <div className="flex justify-between items-center border p-4 rounded-md mt-2">
-                    <div>{item.name}</div>
-                    <div>{item.compo}</div>
-                  </div>
-                </li>
+                <SortableItem items={item} key={index} />
               ))}
             </ul>
           ) : (
@@ -49,6 +57,7 @@ const DNDCard: FC<CardProps> = (props) => {
               Please drop here
             </div>
           )}
+          </SortableContext>
         </CardContent>
       </Card>
     </div>
